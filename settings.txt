@@ -1,0 +1,8 @@
+0 - Default
+1 - Six Required Rule
+2 - No Six Rule (This conflicts with 1, and has a higher priority)
+4 - 4x3 Rule
+
+To apply multiple rules, add the number
+e.g) Six required Rule + 4x3 Rule 
+Rule ID is 5

@@ -1,0 +1,219 @@
+color circleColor = color(255); // Initial circle color
+int players = 2;
+int turn = 1;
+int omok[][] = new int[21][21];
+
+void setup() {
+  background(#FDDF8D);
+  stroke(0);
+  fill(0);
+  size(550, 550);
+
+  for (int i = 25; i <= 525; i += 25) {
+    line(25, i, 525, i);
+    line(i, 25, i, 525);
+  }
+}
+
+void draw() {
+}
+
+void mousePressed() {
+  if (!checkWin(turn % players + 1)) { 
+    if (mouseX >= 25 && mouseX <= 525 && mouseY >= 25 && mouseY <= 525) { 
+      int xIndex = round((mouseX - 25) / 25.0); 
+      int yIndex = round((mouseY - 25) / 25.0); 
+      
+      if (omok[yIndex][xIndex] == 0) { 
+        int x = 25 + xIndex * 25; 
+        int y = 25 + yIndex * 25; 
+        
+        stroke(255);
+        circle(x, y, 25);
+        
+        omok[yIndex][xIndex] = turn % players + 1; 
+        
+        if (checkWin(turn % players + 1)) {
+          String colorName = getColorName(turn , players);
+          println(colorName + " wins!");
+          highlightWinningAlignment(turn % players + 1);
+          return;
+        }
+  
+        updateTurnAndColor();
+      }
+    }
+  }
+}
+
+void highlightWinningAlignment(int player) {
+  for (int row = 0; row < 21; row++) {
+    for (int col = 0; col <= 16; col++) {
+      if (omok[row][col] == player && omok[row][col+1] == player && omok[row][col+2] == player && omok[row][col+3] == player && omok[row][col+4] == player) {
+        stroke(148, 0, 211); 
+        strokeWeight(3);
+        line(25 + col * 25 - 6, 25 + row * 25 , 25 + (col + 4) * 25 + 6, 25 + row * 25 ); 
+        strokeWeight(1);
+        displayWinner();
+        return;
+      }
+    }
+  }
+  
+  for (int col = 0; col < 21; col++) {
+    for (int row = 0; row <= 16; row++) {
+      if (omok[row][col] == player && omok[row+1][col] == player && omok[row+2][col] == player && omok[row+3][col] == player && omok[row+4][col] == player) {
+        stroke(148, 0, 211);
+        strokeWeight(3);
+        line(25 + col * 25 , 25 + row * 25 - 6, 25 + col * 25 , 25 + (row + 4) * 25 + 6); 
+        strokeWeight(1);
+        displayWinner();
+        return;
+      }
+    }
+  }
+  
+  for (int row = 0; row <= 16; row++) {
+    for (int col = 0; col <= 16; col++) {
+      if (omok[row][col] == player && omok[row+1][col+1] == player && omok[row+2][col+2] == player && omok[row+3][col+3] == player && omok[row+4][col+4] == player) {
+        stroke(148, 0, 211); 
+        strokeWeight(3);
+        line(25 + col * 25, 25 + row * 25, 25 + (col + 4) * 25, 25 + (row + 4) * 25);
+        strokeWeight(1);
+        displayWinner();
+        return;
+      }
+    }
+  }
+  
+
+
+
+
+
+
+
+
+
+  for (int row = 4; row < 21; row++) {
+    for (int col = 0; col <= 16; col++) {
+      if (omok[row][col] == player && omok[row-1][col+1] == player && omok[row-2][col+2] == player && omok[row-3][col+3] == player && omok[row-4][col+4] == player) {
+        stroke(148, 0, 211); 
+        strokeWeight(3);
+        line(25 + col * 25, 25 + row * 25, 25 + (col + 4) * 25, 25 + (row - 4) * 25);
+        strokeWeight(1);
+        displayWinner();
+        return;
+      }
+    }
+  }
+}
+
+
+void displayWinner() {
+  String colorName = getColorName(players,turn%players); 
+  println(turn,players);
+  fill(0);
+  textSize(24);
+  textAlign(CENTER, CENTER);
+  text(colorName + " wins!", width/2, height - 50);
+}
+
+
+
+void updateTurnAndColor() {
+  if (turn % players == 0) fill(0);         // Black
+  else if (turn % players == 1) fill(255);  // White
+  else if (turn % players == 2) fill(#FF0000); // Red
+  else if (turn % players == 3) fill(#00FF00); // Green
+
+  
+  turn++;
+}
+
+boolean checkWin(int player) {
+  
+  for (int row = 0; row < 21; row++) {
+    for (int col = 0; col <= 16; col++) {
+      if (omok[row][col] == player && omok[row][col+1] == player && omok[row][col+2] == player && omok[row][col+3] == player && omok[row][col+4] == player) {
+        return true;
+      }
+    }
+  }
+  
+ 
+  for (int col = 0; col < 21; col++) {
+    for (int row = 0; row <= 16; row++) {
+      if (omok[row][col] == player && omok[row+1][col] == player && omok[row+2][col] == player && omok[row+3][col] == player && omok[row+4][col] == player) {
+        return true;
+      }
+    }
+  }
+  
+
+  for (int row = 0; row <= 16; row++) {
+    for (int col = 0; col <= 16; col++) {
+      if (omok[row][col] == player && omok[row+1][col+1] == player && omok[row+2][col+2] == player && omok[row+3][col+3] == player && omok[row+4][col+4] == player) {
+        return true;
+      }
+    }
+  }
+  
+  
+  for (int row = 4; row < 21; row++) {
+    for (int col = 0; col <= 16; col++) {
+      if (omok[row][col] == player && omok[row-1][col+1] == player && omok[row-2][col+2] == player && omok[row-3][col+3] == player && omok[row-4][col+4] == player) {
+        return true;
+      }
+    }
+  }
+  
+  return false;
+}
+
+String getColorName(int a,int b) {
+  if(a==4){
+    if(b ==1) return "Black";
+    else if(b == 2) return "White";
+    else if(b==3) return "Red";
+    else return "Green";
+  }
+  else if(a==2){
+    if(b==1) return "Black";
+    else return "White";
+  }
+  else
+    return "NULL";
+}
+
+void keyPressed() {
+  if (key == '4') {
+    players = 4;
+    turn = 0;
+    updateTurnAndColor();
+    clearOmok();
+  }
+  if (key == '2') {
+    players = 2;
+    turn = 0;
+    updateTurnAndColor();
+    clearOmok();
+  }
+  if (key == 'e') {
+    exit(); 
+  }
+}
+
+void clearOmok() {
+  for (int i = 0; i < 21; i++) {
+    for (int j = 0; j < 21; j++) {
+      omok[i][j] = 0;
+    }
+  }
+  background(#FDDF8D);
+  stroke(0);
+  for (int i = 25; i <= 525; i += 25) {
+    line(25, i, 525, i);
+    line(i, 25, i, 525);
+  }
+}
