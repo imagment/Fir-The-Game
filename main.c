@@ -5,7 +5,6 @@
 #include <termios.h>
 #include <unistd.h>
 
-
 #define MAX_LENGTH 20
 
 void reduce_rating(const char *username, int reduction);
@@ -17,9 +16,9 @@ void flush_input() {
     ;
 }
 void give_badge(const char *username, int badge_id) {
-  FILE *fptr = fopen("user.txt", "r");
+  FILE *fptr = fopen("./user.txt", "r");
   if (!fptr) {
-    perror("Error opening user.txt");
+    perror("Error opening ./user.txt");
     return;
   }
 
@@ -64,9 +63,7 @@ void give_badge(const char *username, int badge_id) {
     }
 
     fclose(fptr);
-  } else {
-    printf("User not found\n");
-  }
+  } 
 }
 int main(void) {
  
@@ -80,7 +77,7 @@ int main(void) {
 
   settings.txt contains minor settings.
   games.txt contains the ratings.
-  user.txt contains all users.
+  ./user.txt contains all users.
 
   Try giving privelleges to the files, so that you can modify them.
   this Game is made by Imagment Studios and feel free to remix or fork.
@@ -90,8 +87,7 @@ int main(void) {
     int command;
   here:
     // clear screen
-
-    sleep(5);
+    sleep(1);
     clear_screen();
     printf("\n[1] Register a new user\n[2] Play\n[3] See Records\n[4] "
            "Exit\n[5] Help\n-----------------\n[6] Badges\n\n");
@@ -112,9 +108,9 @@ int main(void) {
         continue;
       }
 
-      FILE *fptr = fopen("user.txt", "r");
+      FILE *fptr = fopen("./user.txt", "r");
       if (!fptr) {
-        perror("Error opening user.txt");
+        perror("Error opening ./user.txt");
         continue;
       }
 
@@ -135,9 +131,9 @@ int main(void) {
         printf("Username already exists!\n");
       } else {
         printf("Welcome, %s!\n", username);
-        fptr = fopen("user.txt", "a");
+        fptr = fopen("./user.txt", "a");
         if (!fptr) {
-          perror("Error opening user.txt for writing");
+          perror("Error opening ./user.txt for writing");
           continue;
         }
         fprintf(fptr, "%s\n", username);
@@ -171,9 +167,9 @@ int main(void) {
         continue;
       }
 
-      FILE *fptr = fopen("user.txt", "r");
+      FILE *fptr = fopen("./user.txt", "r");
       if (!fptr) {
-        perror("Error opening user.txt");
+        perror("Error opening ./user.txt");
         continue;
       }
 
@@ -227,6 +223,7 @@ int main(void) {
       } else {
         printf("User not found\n");
       }
+      sleep(2);
     } else if (command == 2) {
       printf("\nYou are trying to play with a human.\nPlease customize your "
              "game.\n");
@@ -274,7 +271,7 @@ int main(void) {
         }
       } while (time < 300 || time > 1200);
 
-      int player_clocks[player];
+      float player_clocks[player];
       for (int i = 0; i < player; i++) {
         player_clocks[i] = time;
       }
@@ -351,53 +348,17 @@ int main(void) {
 
         turn++;
         turn %= player;
-        printf("It is %s's turn. Remaining time: %d seconds.\n",
+        printf("\nUse w,a,s,d to move and space to place,\nPress X to draw and 0 to skip. J is a key for jumping.\nIt is %s's turn. Remaining time: %g seconds.\n",
                player_name[turn], player_clocks[turn]);
         sleep(1);
-
+        
         while (player_clocks[turn] > 0) {
           // Reduce clock
-          sleep(1);
-          player_clocks[turn]--;
-          // Clear screen
-          clear_screen();
-          if (gamemode != 2) {
-            for (int i = 0; i <= size; i++) {
-              for (int j = 0; j <= size; j++) {
-                if (pointer_x == i && pointer_y == j) {
-                  printf("🔘");
-                  continue;
-                }
-                  if (board[i][j] == 0) 
-                      printf("⚫");
-                    else if (board[i][j] == 1)
-                      printf("🔴");
-                    else if (board[i][j] == 2)
-                      printf("🔵");
-                    else if (board[i][j] == 3)
-                      printf("🟡");
-                    else if (board[i][j] == 4)
-                      printf("🟢");
-                    else if (board[i][j] == 5)
-                      printf("🟣");
-                
-              }
-              printf("\n");
-            }
-          } else {
-            printf("This is blindfold mode.\nThe location of the pointer is %d "
-                   "%d\n",
-                   pointer_x, pointer_y);
-            if (board[pointer_x][pointer_y] != 0) {
-              printf("There is a token under the pointer\n");
-            } else {
-              printf("There is no token under the pointer\n");
-            }
-            printf("\n\n");
-          }
-          // Handle user input for moving the pointer
+          usleep(500000);
+          player_clocks[turn]-=0.5;
           if (kbhit()) {
             char input = getchar();
+
             if (input == 'A' || input == 'a') {
               if (pointer_y > 0) {
                 pointer_y--;
@@ -457,6 +418,45 @@ int main(void) {
               break;
             }
           }
+          player_clocks[turn]-=0.1;
+          // Clear screen
+          clear_screen();
+          if (gamemode != 2) {
+            for (int i = 0; i <= size; i++) {
+              for (int j = 0; j <= size; j++) {
+                if (pointer_x == i && pointer_y == j) {
+                  printf("🔘");
+                  continue;
+                }
+                  if (board[i][j] == 0) 
+                      printf("⚫");
+                    else if (board[i][j] == 1)
+                      printf("🔴");
+                    else if (board[i][j] == 2)
+                      printf("🔵");
+                    else if (board[i][j] == 3)
+                      printf("🟡");
+                    else if (board[i][j] == 4)
+                      printf("🟢");
+                    else if (board[i][j] == 5)
+                      printf("🟣");
+                
+              }
+              printf("\n");
+            }
+          } else {
+            printf("This is blindfold mode.\nThe location of the pointer is %d "
+                   "%d\n",
+                   pointer_x, pointer_y);
+            if (board[pointer_x][pointer_y] != 0) {
+              printf("There is a token under the pointer\n");
+            } else {
+              printf("There is no token under the pointer\n");
+            }
+            printf("\n\n");
+          }
+          // Handle user input for moving the pointer
+          
         }
 
         if (player_clocks[turn] <= 0) {
@@ -571,9 +571,9 @@ int main(void) {
         continue;
       }
 
-      FILE *fptr = fopen("user.txt", "r");
+      FILE *fptr = fopen("./user.txt", "r");
       if (!fptr) {
-        perror("Error opening user.txt");
+        perror("Error opening ./user.txt");
         continue;
       }
 
@@ -630,12 +630,13 @@ int main(void) {
     } else {
       printf("Invalid command. Please try again. (Press 5 For help)\n");
     }
+    sleep(2);
   }
 }
 void reduce_rating(const char *username, int reduction) {
-  FILE *fptr = fopen("user.txt", "r");
+  FILE *fptr = fopen("./user.txt", "r");
   if (!fptr) {
-    perror("Error opening user.txt");
+    perror("Error opening ./user.txt");
     return;
   }
 
