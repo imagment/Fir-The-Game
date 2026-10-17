@@ -1,6 +1,6 @@
 Fir 0.9.0 Version <br>
  <br>
-Welcome to Fir 0.8.5 Beta, developed by Imagment Studios and open-sourced for your enjoyment. We hope you have fun playing! If you have any ideas or suggestions, please feel free to leave a comment. <br>
+Welcome to Fir 0.9.0 Beta, developed by Imagment Studios and open-sourced for your enjoyment. We hope you have fun playing! If you have any ideas or suggestions, please feel free to leave a comment. <br>
  <br>
 Upcoming Updates: <br>
  <br>
